@@ -8,7 +8,7 @@ jobs:
     build_and_publish:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v3
             - name: Build and push the Image
               run: | 
                   docker login --username owenmill --password ${{secrets.ACCESS_TOKEN}} ghcr.io
