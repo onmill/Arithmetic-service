@@ -6,21 +6,28 @@ const cors = require('cors');
 app.use(cors());
 
 app.get('/', (req, res) => {
-    //res.sendFile(path.join(__dirname, '/src/index.html'));
     res.send("Arithmetic service - Hello World");
 });
 
 app.get('/add/:n/:m', (req, res) => {
-    res.json((Number(req.params.n) + Number(req.params.m)));
+    let n = Number(req.params.n);
+    let m = Number(req.params.m);
+    res.json(add(n,m));
 });
+
 app.get('/subtract/:n/:m', (req, res) => {
-    res.json((Number(req.params.n) - Number(req.params.m)));
-});
+    let n = Number(req.params.n);
+    let m = Number(req.params.m);
+    res.json(subtract(n,m));});
+
 app.get('/multiply/:n/:m', (req, res) => {
-    res.json((Number(req.params.n) * Number(req.params.m)));
-});
+    let n = Number(req.params.n);
+    let m = Number(req.params.m);
+    res.json(multiply(n,m));});
+
 app.get('/divide/:n/:m', (req, res) => {
-    res.json((Number(req.params.n) / Number(req.params.m)));
-});
+    let n = Number(req.params.n);
+    let m = Number(req.params.m);
+    res.json(divide(n,m));});
 
 app.listen(port);
