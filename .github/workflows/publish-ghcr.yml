@@ -17,3 +17,8 @@ jobs:
                 docker login --username onmill --password ${{secrets.ACCESS_TOKEN}} ghcr.io
                 docker build -t ghcr.io/onmill/arithmetic-service:latest --file Dockerfile .  
                 docker push ghcr.io/onmill/arithmetic-service:latest 
+            - name: Publish the image to azure container registry
+              run: |
+                docker login --username --password ${{secrets.AZURE_CONTAINER_REGISTRY}} practicum15.azurecr.io
+                docker tag ghcr.io/onmill/arithmetic-service:latest practicum15.azurecr.io/arithmetic-service:latest
+                docker push practicum15.azurecr.io/arithmetic-service:latest
