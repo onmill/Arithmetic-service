@@ -6,6 +6,11 @@ on:
 jobs:
     build_and_publish:
         runs-on: ubuntu-latest
+        env:
+          VERSION: ${{ github.sha }}
+          CONTAINER_REGISTRY: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+          CONTAINER_REGISTRY_UN: ${{ secrets.CONTAINER_REGISTRY_UN }}
+          CONTAINER_REGISTRY_PW: ${{ secrets.CONTAINER_REGISTRY_PW }}
         steps:
             - uses: actions/checkout@v3
             - name: npm install
@@ -19,6 +24,13 @@ jobs:
                 docker push ghcr.io/onmill/arithmetic-service:latest 
             - name: Publish the image to azure container registry
               run: |
-                docker login --username onmill --password ${{secrets.AZURE_CONTAINER_REGISTRY}} practicum15.azurecr.io
-                docker tag ghcr.io/onmill/arithmetic-service:latest practicum15.azurecr.io/arithmetic-service:latest
-                docker push practicum15.azurecr.io/arithmetic-service:latest
+                docker login --username CONTAINER_REGISTRY_UN --password ${{CONTAINER_REGISTRY_PW}}
+                docker tag ghcr.io/onmill/arithmetic-service:$VERSION $CONTAINER_REGISTRY/arithmetic-service:$VERSION
+                docker push $CONTAINER_REGISTRY/arithmetic-service:$VERSION
+            # Installs Kubectl and connects it to the cluster.
+            # https://github.com/marketplace/actions/kubernetes-cli-kubectl
+            - uses: tate/kubectl-action@v1
+              with:
+                base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+            - name: Deploy
+              run: ./.deploy.sh
